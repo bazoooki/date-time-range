@@ -59,6 +59,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
   }
 
   const clear = () => {
+    setDateRange({from: undefined, to: undefined})
     setResponsiveRange(defaultResponsiveRange)
     onChange({from: undefined, to: undefined})
   }
@@ -110,7 +111,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                 </Tab.Panels>
               </Tab.Group>
             </div>
-            <div className="panel-actions flex justify-between p-4 bg-slate-50 border-t ">
+            <div className="panel-actions flex justify-between p-3 bg-slate-50 border-t ">
               <div>
                 <Button
                   variant="ghost"

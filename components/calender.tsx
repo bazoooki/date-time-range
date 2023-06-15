@@ -1,13 +1,11 @@
 "use client"
-
 import * as React from "react"
 import {DayPicker} from "react-day-picker"
-
 import {cn} from "@/lib/utils"
 import {buttonVariants} from "@/components/ui/button"
 import {ChevronLeftIcon, ChevronRightIcon} from "@heroicons/react/20/solid";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>
+type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 function Calendar({
                     className,
@@ -42,12 +40,11 @@ function Calendar({
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
         ),
         day_selected:
-        cn(
-          buttonVariants({variant: "default"}),
-          'hover:text-white'
-        ),
+          cn(
+            buttonVariants({variant: "default"}),
+            'hover:text-white'
+          ),
         day_today: "bg-accent text-accent-foreground",
-        day_outside: "text-muted-foreground opacity-50",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
@@ -55,8 +52,8 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({...props}) => <ChevronLeftIcon className="h-4 w-4"/>,
-        IconRight: ({...props}) => <ChevronRightIcon className="h-4 w-4"/>,
+        IconLeft: ({...props}) => <ChevronLeftIcon className="h-5 w-5"/>,
+        IconRight: ({...props}) => <ChevronRightIcon className="h-5 w-5"/>,
       }}
       {...props}
     />

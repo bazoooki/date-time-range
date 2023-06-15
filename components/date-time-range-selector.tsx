@@ -1,22 +1,44 @@
 'use client';
 import {Popover, Tab} from "@headlessui/react";
-import {CalendarIcon} from "@heroicons/react/20/solid";
+import {CalendarIcon, CheckCircleIcon} from "@heroicons/react/20/solid";
 import {Button, buttonVariants} from "@/components/ui/button";
-import {Calendar} from "@/components/ui/calender";
+import {Calendar} from "@/components/calender";
 import {DateRange} from "react-day-picker"
-import React from "react";
+import React, {useState} from "react";
 import {format} from "date-fns";
+import {RadioGroup} from '@headlessui/react'
+import {DAYS, HOURS, MINUTES, MONTH, WEEKS, YEARS} from "@/lib/time.constants";
+import {getResponsiveDateTimeRange} from "@/lib/utils";
+import {Input} from "@/components/ui/input";
 
 interface DateTimeRangeSelectorProps {
   onChange: (value: DateRange | undefined) => void;
   value: DateRange | undefined;
 }
 
-const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, value}) => {
-  const today = new Date();
+const timeRanges = [
+  {label: 'Last 5 minutes', value: '5_minutes', duration: 5, unit: MINUTES},
+  {label: 'Last 1 hour', value: '1_hour', duration: 1, unit: HOURS},
+  {label: 'Last 24 hours', value: '24_hours', duration: 24, unit: HOURS},
+  {label: 'Last 3 days', value: '3_days', duration: 3, unit: DAYS},
+  {label: 'Last 1 week', value: '1_week', duration: 1, unit: WEEKS},
+  {label: 'Last 1 month', value: '1_month', duration: 1, unit: MONTH},
+  {label: 'Last 2 years', value: '2_years', duration: 2, unit: YEARS},
+]
 
-  const dateLabel = value?.from ? (
-    value.to ? (
+const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, value}) => {
+
+  const today = new Date();
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
+    from: value?.from,
+    to: value?.to,
+  })
+  const [customRange, setCustomRange] = useState(timeRanges[0])
+  const [selectedTab, setSelectedTab] = useState(0)
+
+  const dateLabel = (value?.from && selectedTab === 0 ?
+    `${customRange.duration} ${customRange.unit}` :
+    value?.from ? ( value.to ? (
       <>
         {format(value.from, "LLL dd, y")} -{" "}
         {format(value.to, "LLL dd, y")}
@@ -26,11 +48,27 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
     )
   ) : (
     <span>Pick a date</span>
-  )
+  ))
+
+
+  const handleApply = () => {
+    if (selectedTab === 1) {
+      onChange(dateRange)
+    } else {
+      if (!customRange) {
+        return
+      }
+      const {duration, unit} = customRange
+      const isPast = true
+      const newDateRange = getResponsiveDateTimeRange({duration, unit, isPast})
+      onChange(newDateRange)
+    }
+  }
+
 
   return (
     <Popover>
-      {({open}) => (
+      {({open, close}) => (
         /* Use the `open` state to conditionally change the direction of the chevron icon. */
         <>
           <Popover.Button
@@ -42,7 +80,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
           </Popover.Button>
           <Popover.Panel className=" border max-w-[580px] bg-white shadow-lg   text-slate-900 flex flex-col">
             <div className="tabs p-4">
-              <Tab.Group>
+              <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
                 <Tab.List
                   className="flex space-x-1 rounded-lg border border-slate-300 p-0  overflow-hidden inline-flex">
                   <Tab
@@ -59,15 +97,54 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                   </Tab>
                 </Tab.List>
                 <Tab.Panels className="min-h-[200px]">
-                  <Tab.Panel>Relative content</Tab.Panel>
+                  <Tab.Panel>
+                    <RadioGroup value={customRange} onChange={setCustomRange} className="space-y-2">
+                      <RadioGroup.Label className="text-sm">Choose a range</RadioGroup.Label>
+                      {timeRanges.map(range =>
+                        <RadioGroup.Option value={range} key={range.value}>
+                          {({checked}) => (
+                            <div
+                              className="flex items-center space-x-1 text-sm hover:text-teal-800 cursor-pointer inline-flex">
+                              <div
+                                className="w-4 h-4 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
+                                {checked && <CheckCircleIcon className="w-4 h-4 text-teal-600"/>}
+                              </div>
+                              <div>{range.label}</div>
+                            </div>
+                          )}
+                        </RadioGroup.Option>
+                      )}
+                      <RadioGroup.Option value='custom' key='custom'>
+                        {({checked}) => (
+                          <div
+                            className="flex items-start space-x-1 text-sm hover:text-teal-800 cursor-pointer inline-flex">
+                            <div
+                              className="w-4 h-4 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
+                              {checked && <CheckCircleIcon className="w-4 h-4 text-teal-600"/>}
+                            </div>
+                            <div className="flex flex-col">
+                              <div>Custom range</div>
+                              <div className="text-slate-400 text-xs">Range can be only within 2 years</div>
+                              {checked && <div className="text-slate-900 flex items-center">
+                                <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
+                                  <label htmlFor="duration" className="text-xs text-slate-600">Duration </label>
+                                  <Input id="duration" placeholder="Duration" />
+                                </div>
+                              </div>}
+                            </div>
+                          </div>
+                        )}
+                      </RadioGroup.Option>
+                    </RadioGroup>
+                  </Tab.Panel>
                   <Tab.Panel>
                     <Calendar
                       initialFocus
                       disabled={{after: today}}
                       mode="range"
-                      defaultMonth={value?.from}
-                      selected={value}
-                      onSelect={onChange}
+                      defaultMonth={dateRange?.from || today}
+                      selected={dateRange}
+                      onSelect={setDateRange}
                       numberOfMonths={2}
                     />
                   </Tab.Panel>
@@ -76,15 +153,30 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
             </div>
             <div className="panel-actions flex justify-between p-4 bg-slate-50 border-t ">
               <div>
-                <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-800">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:text-red-800"
+                >
                   Clear and dismiss
                 </Button>
               </div>
               <div>
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={close}
+                >
                   Cancel
                 </Button>
-                <Button variant="default" size="sm">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => {
+                    handleApply();
+                    close();
+                  }}
+                >
                   Apply
                 </Button>
               </div>

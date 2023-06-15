@@ -8,12 +8,18 @@ import React, {useState} from "react";
 import {format} from "date-fns";
 import {RadioGroup} from '@headlessui/react'
 import {DAYS, HOURS, MINUTES, MONTH, WEEKS, YEARS} from "@/lib/time.constants";
-import {getResponsiveDateTimeRange} from "@/lib/utils";
+import {cn, getResponsiveDateTimeRange} from "@/lib/utils";
+import InputNumber from 'rc-input-number';
 import {Input} from "@/components/ui/input";
 
 interface DateTimeRangeSelectorProps {
   onChange: (value: DateRange | undefined) => void;
   value: DateRange | undefined;
+}
+
+interface CustomResponsiveRange {
+  duration: number;
+  unit: string;
 }
 
 const timeRanges = [
@@ -33,35 +39,43 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
     from: value?.from,
     to: value?.to,
   })
-  const [customRange, setCustomRange] = useState(timeRanges[0])
+  const [responsiveRange, setResponsiveRange] = useState(timeRanges[0])
+  const [customResponsiveRange, setCustomResponsiveRange] = useState<CustomResponsiveRange>({
+    duration: 0,
+    unit: MINUTES
+  })
   const [selectedTab, setSelectedTab] = useState(0)
 
   const dateLabel = (value?.from && selectedTab === 0 ?
-    `${customRange.duration} ${customRange.unit}` :
-    value?.from ? ( value.to ? (
-      <>
-        {format(value.from, "LLL dd, y")} -{" "}
-        {format(value.to, "LLL dd, y")}
-      </>
+    `${responsiveRange.duration} ${responsiveRange.unit}` :
+    value?.from ? (value.to ? (
+        <>
+          {format(value.from, "LLL dd, y")} -{" "}
+          {format(value.to, "LLL dd, y")}
+        </>
+      ) : (
+        format(value.from, "LLL dd, y")
+      )
     ) : (
-      format(value.from, "LLL dd, y")
-    )
-  ) : (
-    <span>Pick a date</span>
-  ))
+      <span>Pick a date</span>
+    ))
 
 
   const handleApply = () => {
     if (selectedTab === 1) {
       onChange(dateRange)
     } else {
-      if (!customRange) {
+      if (!responsiveRange) {
         return
       }
-      const {duration, unit} = customRange
-      const isPast = true
-      const newDateRange = getResponsiveDateTimeRange({duration, unit, isPast})
-      onChange(newDateRange)
+      if (typeof responsiveRange === 'string' && responsiveRange === 'custom') {
+        console.log('handle custom range')
+      } else {
+        const {duration, unit} = responsiveRange
+        const isPast = true
+        const newDateRange = getResponsiveDateTimeRange({duration, unit, isPast})
+        onChange(newDateRange)
+      }
     }
   }
 
@@ -98,7 +112,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                 </Tab.List>
                 <Tab.Panels className="min-h-[200px]">
                   <Tab.Panel>
-                    <RadioGroup value={customRange} onChange={setCustomRange} className="space-y-2">
+                    <RadioGroup value={responsiveRange} onChange={setResponsiveRange} className="space-y-1">
                       <RadioGroup.Label className="text-sm">Choose a range</RadioGroup.Label>
                       {timeRanges.map(range =>
                         <RadioGroup.Option value={range} key={range.value}>
@@ -119,7 +133,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                           <div
                             className="flex items-start space-x-1 text-sm hover:text-teal-800 cursor-pointer inline-flex">
                             <div
-                              className="w-4 h-4 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
+                              className="w-4 h-4 mt-1.5 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
                               {checked && <CheckCircleIcon className="w-4 h-4 text-teal-600"/>}
                             </div>
                             <div className="flex flex-col">
@@ -128,7 +142,37 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                               {checked && <div className="text-slate-900 flex items-center">
                                 <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
                                   <label htmlFor="duration" className="text-xs text-slate-600">Duration </label>
-                                  <Input id="duration" placeholder="Duration" />
+                                  <Input
+                                    type="text"
+                                    pattern="[0-9]*"
+                                    id="duration"
+                                    placeholder="Duration"
+                                    value={customResponsiveRange.duration}
+                                    onChange={(e) => setCustomResponsiveRange((prev) => ({
+                                      ...prev,
+                                      duration: e.target.validity.valid ? Number(e.target.value) :prev.duration
+                                    }))}
+                                  />
+                                </div>
+                                <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5 ml-2">
+                                  <label htmlFor="duration" className="text-xs text-slate-600">Unit </label>
+                                  <select
+                                    className={cn(
+                                      buttonVariants({variant: 'outline', size: 'xs'}),
+                                      'focus:outline-none outline-none focus:ring-0 pr-2'
+                                    )}
+                                    value={customResponsiveRange.unit}
+                                    onChange={(event) => setCustomResponsiveRange((prev) => ({
+                                      ...prev,
+                                      unit: event.target.value
+                                    }))}
+                                  >
+                                    <option value="minutes">Minutes</option>
+                                    <option value="days">Days</option>
+                                    <option value="weeks">Weeks</option>
+                                    <option value="months">Months</option>
+                                    <option value="years">Years</option>
+                                  </select>
                                 </div>
                               </div>}
                             </div>

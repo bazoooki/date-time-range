@@ -1,34 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Hi,
+Please find the instructions for your next assignment below.
 
-## Getting Started
+Your task is to create a ReactJS component for selecting date & time ranges.
+Component should be named as "DateTimeRangeSelector",
+and should accept 2 props: "value" and "onChange".
 
-First, run the development server:
+"value" prop is expected to be an array of 2 items ([fromDateTime, toDateTime]).
+"onChange" prop is expected to be a function that handles any change of selected value.
+"onChange" function will be called with the updated value (e.g "onChange(updatedValue)").
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Component should look like a text input - and should show the appropriate label according to current selection (see attached example for reference).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+When clicked and displayed, component should support 2 modes for selection, either Relative or Absolute.
+Relative can be for example "1 hour ago" (see all possible options in the attached reference images),
+while Absolute represents an absolute range of date and time (e.g from "2023-04-01 08:00:00" to "2023-04-01 23:59:59").
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Note: both Relative and Absolute modes should support a custom input, see attached reference images to understand this more.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Important notes:
+- please use https://jsfiddle.net (or similar) to deploy the code at.
+- please see attached reference images of this component.
+- should be written with React functional components (not class components).
+- component should accept only the 2 props mentioned above, not more.
+- after component is done, please show an example implementation of it in a fake dummy form with a state that's changing according to component "onChange".
+- please find a decent css library so the component will look as good as possible, doesn't matter which one.
+- bonus: separate between templates and logic by creating custom hooks.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+good luck :)

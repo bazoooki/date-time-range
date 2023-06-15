@@ -10,7 +10,6 @@ const SimpleForm = () => {
   })
   return (
     <div className="flex flex-col h-screen w-full p-12 max-w-4xl">
-      {/*SimpleForm - {JSON.stringify(dateRange)}*/}
       <div>
         <DateTimeRangeSelector onChange={setDateRange} value={dateRange}/>
       </div>

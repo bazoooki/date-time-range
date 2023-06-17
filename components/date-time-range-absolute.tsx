@@ -26,7 +26,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
   }
 
   return (
-    <div id="date-time-range-absolute" className="flex flex-col space-y-2">
+    <div id="date-time-range-absolute" className="flex flex-col space-y-2 justify-center items-center">
       <Calendar
         initialFocus
         disabled={{after: today}}
@@ -45,6 +45,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             pattern="[0-9]*"
             id="start-date"
             placeholder="YYYY/MM/DD"
+            className="text-xs"
             value={value?.from ? format(value?.from, "yyyy-MM-dd") : ''}
             onChange={(e) => updateDateRangeTime(new Date(e.target.value), true)}
           />
@@ -56,6 +57,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             pattern="[0-9]*"
             id="start-time"
             placeholder="hh:mm"
+            className="text-xs"
             value={value?.from ? format(value?.from, "HH:mm") : ''}
             onChange={(e) => handleTimeChange(e.target.value, true)}
           />
@@ -67,6 +69,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             pattern="[0-9]*"
             id="end-date"
             placeholder="YYYY/MM/DD"
+            className="text-xs"
             value={value?.to ? format(value?.to, "yyyy-MM-dd") : ''}
             onChange={(e) => updateDateRangeTime(new Date(e.target.value), false)}
           />
@@ -78,6 +81,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             pattern="[0-9]*"
             id="end-time"
             placeholder="hh:mm"
+            className="text-xs"
             value={value?.to ? format(value.to, "HH:mm") : ''}
             onChange={(e) => handleTimeChange(e.target.value, false)}
           />

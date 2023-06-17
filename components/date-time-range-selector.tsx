@@ -73,7 +73,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
               {dateLabel}
             </div>
           </Popover.Button>
-          <Popover.Panel className=" border max-w-[520px] bg-white shadow-lg rounded  text-slate-900 flex flex-col">
+          <Popover.Panel className=" border max-w-[500px] bg-white shadow-lg rounded  text-slate-900 flex flex-col">
             <div className="tabs p-4">
               <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
                 <Tab.List

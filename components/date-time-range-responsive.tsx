@@ -37,7 +37,7 @@ const DateTimeRangeResponsive: React.FC<DateTimeRangeResponsiveProps> = ({onChan
   }
 
   return (
-    <RadioGroup value={responsiveRange} onChange={handleRangeSelected} className="space-y-0.5 mt-1">
+    <RadioGroup value={responsiveRange} onChange={handleRangeSelected} className="space-y-0.5 mt-1 px-1.5">
       <RadioGroup.Label className="text-xs font-medium">Choose a range</RadioGroup.Label>
       {timeRanges.map(range =>
         <RadioGroup.Option value={range.value} key={range.value}>

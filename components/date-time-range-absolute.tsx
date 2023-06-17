@@ -13,14 +13,15 @@ interface DateTimeRangeAbsoluteProps {
 const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, value}) => {
 
   const today = new Date();
+
   const handleTimeChange = (val: string, isFrom: boolean) => {
     const date = isFrom ? new Date(value?.from || today) : new Date(value?.to || today)
     const [hours, minutes] = val.split(':')
     date.setHours(parseInt(hours))
     date.setMinutes(parseInt(minutes))
-    updateDateRangeTime(date, isFrom)
+    updateDateRange(date, isFrom)
   }
-  const updateDateRangeTime = (date: Date, isFrom: boolean) => {
+  const updateDateRange = (date: Date, isFrom: boolean) => {
     const val = isFrom ? {from: date, to: value?.to} : {from: value?.from, to: date}
     onChange(val)
   }
@@ -29,15 +30,14 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
     <div id="date-time-range-absolute" className="flex flex-col space-y-2 justify-center items-center">
       <Calendar
         initialFocus
-        disabled={{after: today}}
+        disabled={{after: today, before: new Date(today.getFullYear(), today.getMonth() - 24)}}
         mode="range"
         defaultMonth={value?.from || today}
         selected={value}
         onSelect={onChange}
         numberOfMonths={2}
       />
-      <div className="flex items-center  space-x-1.5">
-
+      <div className="flex items-center  space-x-1.5 flex-wrap md:flex-nowrap">
         <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
           <label htmlFor="start-date" className="text-xs text-slate-600 pl-1">Start date</label>
           <Input
@@ -47,7 +47,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             placeholder="YYYY/MM/DD"
             className="text-xs"
             value={value?.from ? format(value?.from, "yyyy-MM-dd") : ''}
-            onChange={(e) => updateDateRangeTime(new Date(e.target.value), true)}
+            onChange={(e) => updateDateRange(new Date(e.target.value), true)}
           />
         </div>
         <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
@@ -71,7 +71,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             placeholder="YYYY/MM/DD"
             className="text-xs"
             value={value?.to ? format(value?.to, "yyyy-MM-dd") : ''}
-            onChange={(e) => updateDateRangeTime(new Date(e.target.value), false)}
+            onChange={(e) => updateDateRange(new Date(e.target.value), false)}
           />
         </div>
         <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
@@ -86,7 +86,6 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
             onChange={(e) => handleTimeChange(e.target.value, false)}
           />
         </div>
-
       </div>
     </div>
   )

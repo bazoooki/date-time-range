@@ -24,21 +24,14 @@ const defaultResponsiveRange: ResponsiveTimeRange = {
 }
 const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, value}) => {
 
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: value?.from,
-    to: value?.to,
-  })
   const [responsiveRange, setResponsiveRange] = useState<ResponsiveTimeRange>(defaultResponsiveRange)
   const [selectedTab, setSelectedTab] = useState(0)
-  const [selectedRange, setSelectedRange] = useState({
-    tabIndex: 0,
-    responsiveRange: defaultResponsiveRange,
-  })
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({from: value?.from, to: value?.to})
+  const [selectedRange, setSelectedRange] = useState({tabIndex: 0, responsiveRange: defaultResponsiveRange})
+
   const responsiveLabel = `Last ${selectedRange.responsiveRange.duration} ${selectedRange.responsiveRange.unit}`
   const absoluteLabel = (value?.from && value?.to) ?
-    `${format(value.from, "LLL dd, y")} - ${format(value.to, "LLL dd, y")}` :
-    <span>Pick a date</span>
-
+    `${format(value.from, "LLL dd, y")} - ${format(value.to, "LLL dd, y")}` : <span>Pick a date</span>
   const dateLabel = value?.from && selectedRange.tabIndex === 0 ? responsiveLabel : absoluteLabel
 
   const apply = () => {
@@ -63,7 +56,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
   }
   return (
     <Popover>
-      {({open, close}) => (
+      {({close}) => (
         /* Use the `open` state to conditionally change the direction of the chevron icon. */
         <>
           <Popover.Button
@@ -80,13 +73,13 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                   className="flex space-x-1 rounded-lg border border-slate-300 p-0  overflow-hidden inline-flex">
                   <Tab
                     className={
-                      ({selected}) => (buttonVariants({variant: selected ? 'default' : 'ghost', size: 'xs'}))}
+                      ({selected}) => (buttonVariants({variant: selected ? 'default' : 'ghost', size: 'sm'}))}
                   >
                     Relative range
                   </Tab>
                   <Tab
                     className={
-                      ({selected}) => (buttonVariants({variant: selected ? 'default' : 'ghost', size: 'xs'}))}
+                      ({selected}) => (buttonVariants({variant: selected ? 'default' : 'ghost', size: 'sm'}))}
                   >
                     Absolute range
                   </Tab>
@@ -96,7 +89,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                     <DateTimeRangeResponsive onChange={setResponsiveRange} value={responsiveRange}/>
                   </Tab.Panel>
                   <Tab.Panel>
-                    <DateTimeRangeAbsolute onChange={setDateRange} value={dateRange} />
+                    <DateTimeRangeAbsolute onChange={setDateRange} value={dateRange}/>
                   </Tab.Panel>
                 </Tab.Panels>
               </Tab.Group>
@@ -116,13 +109,21 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                 </Button>
               </div>
               <div>
-                <Button variant="ghost" size="sm" onClick={close}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={close}
+                >
                   Cancel
                 </Button>
-                <Button variant="default" size="sm" onClick={() => {
-                  apply();
-                  close();
-                }}>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => {
+                    apply();
+                    close();
+                  }}
+                >
                   Apply
                 </Button>
               </div>

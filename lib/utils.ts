@@ -1,6 +1,6 @@
 import {ClassValue, clsx} from 'clsx'
 import {twMerge} from 'tailwind-merge'
-import {DAYS, HOURS, MINUTES, MONTH, WEEKS, YEARS} from "@/lib/time.constants";
+import {DAYS, HOURS, MINUTES, MONTHS, WEEKS, YEARS} from "@/lib/time.constants";
 import {addMinutes} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
@@ -32,7 +32,7 @@ export const getResponsiveDateTimeRange = (
     case WEEKS:
       amount = duration * 7 * 24 * 60
       break
-    case MONTH:
+    case MONTHS:
       amount = duration * 30 * 24 * 60
       break
     case YEARS:

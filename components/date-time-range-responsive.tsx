@@ -4,7 +4,7 @@ import {CheckCircleIcon} from "@heroicons/react/20/solid";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
-import {DAYS, HOURS, MINUTES, MONTH, WEEKS, YEARS} from "@/lib/time.constants";
+import {DAYS, HOURS, MINUTES, MONTHS, WEEKS, YEARS} from "@/lib/time.constants";
 import type {ResponsiveTimeRange} from "@/types/types";
 
 interface DateTimeRangeResponsiveProps {
@@ -18,22 +18,22 @@ const timeRanges: ResponsiveTimeRange[] = [
   {value: '24_hours', duration: 24, unit: HOURS},
   {value: '3_days', duration: 3, unit: DAYS},
   {value: '1_week', duration: 1, unit: WEEKS},
-  {value: '1_month', duration: 1, unit: MONTH},
+  {value: '1_month', duration: 1, unit: MONTHS},
   {value: '2_years', duration: 2, unit: YEARS},
 ]
 const DateTimeRangeResponsive: React.FC<DateTimeRangeResponsiveProps> = ({onChange, value}) => {
+
   const [responsiveRange, setResponsiveRange] = useState(value.value)
 
   const handleRangeSelected = (value: string) => {
     if (value === 'custom') {
       setResponsiveRange(value)
-      onChange({duration: 5, unit: MINUTES, value: 'custom'})
+      onChange({duration: 1, unit: HOURS, value: 'custom'})
     } else {
       setResponsiveRange(value)
       const newRange = timeRanges.find(range => range.value === value)!
       onChange(newRange)
     }
-
   }
 
   return (
@@ -43,12 +43,12 @@ const DateTimeRangeResponsive: React.FC<DateTimeRangeResponsiveProps> = ({onChan
         <RadioGroup.Option value={range.value} key={range.value}>
           {({checked}) => (
             <div
-              className="flex items-center space-x-1 text-xs hover:text-teal-800 cursor-pointer inline-flex">
+              className="flex items-center space-x-2.5 text-sm hover:text-teal-800 cursor-pointer inline-flex">
               <div
                 className="w-4 h-4 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
                 {checked && <CheckCircleIcon className="w-4 h-4 text-teal-600"/>}
               </div>
-              <div>{`${range.duration} ${range.unit}`}</div>
+              <div>{`Last ${range.duration} ${range.unit}`}</div>
             </div>
           )}
         </RadioGroup.Option>
@@ -56,7 +56,7 @@ const DateTimeRangeResponsive: React.FC<DateTimeRangeResponsiveProps> = ({onChan
       <RadioGroup.Option value="custom" key="custom">
         {({checked}) => (
           <div
-            className="flex items-start space-x-1 text-xs hover:text-teal-800 cursor-pointer inline-flex">
+            className="flex items-start space-x-1 text-sm hover:text-teal-800 cursor-pointer inline-flex">
             <div
               className="w-4 h-4 mt-1.5 rounded-full flex items-center justify-center bg-slate-100 border border-slate-300 ">
               {checked && <CheckCircleIcon className="w-4 h-4 text-teal-600"/>}
@@ -94,11 +94,12 @@ const DateTimeRangeResponsive: React.FC<DateTimeRangeResponsiveProps> = ({onChan
                       unit: event.target.value
                     })}
                   >
-                    <option value="minutes">Minutes</option>
-                    <option value="days">Days</option>
-                    <option value="weeks">Weeks</option>
-                    <option value="months">Months</option>
-                    <option value="years">Years</option>
+                    <option value={MINUTES}>Minutes</option>
+                    <option value={HOURS}>Hours</option>
+                    <option value={DAYS}>Days</option>
+                    <option value={WEEKS}>Weeks</option>
+                    <option value={MONTHS}>Months</option>
+                    <option value={YEARS}>Years</option>
                   </select>
                 </div>
               </div>}

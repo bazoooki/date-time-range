@@ -2,7 +2,6 @@
 import {Popover, Tab} from "@headlessui/react";
 import {CalendarIcon} from "@heroicons/react/20/solid";
 import {Button, buttonVariants} from "@/components/ui/button";
-import {Calendar} from "@/components/calender";
 import {DateRange} from "react-day-picker"
 import React, {useState} from "react";
 import {format} from "date-fns";
@@ -10,6 +9,7 @@ import {getResponsiveDateTimeRange} from "@/lib/utils";
 import DateTimeRangeResponsive from "@/components/date-time-range-responsive";
 import type {ResponsiveTimeRange} from "@/types/types";
 import {MINUTES} from "@/lib/time.constants";
+import DateTimeRangeAbsolute from "@/components/date-time-range-absolute";
 
 interface DateTimeRangeSelectorProps {
   onChange: (value: DateRange | undefined) => void;
@@ -23,25 +23,23 @@ const defaultResponsiveRange: ResponsiveTimeRange = {
   value: '5_minutes'
 }
 const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, value}) => {
-  const today = new Date();
+
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
     from: value?.from,
     to: value?.to,
   })
   const [responsiveRange, setResponsiveRange] = useState<ResponsiveTimeRange>(defaultResponsiveRange)
   const [selectedTab, setSelectedTab] = useState(0)
+  const [selectedRange, setSelectedRange] = useState({
+    tabIndex: 0,
+    responsiveRange: defaultResponsiveRange,
+  })
+  const responsiveLabel = `Last ${selectedRange.responsiveRange.duration} ${selectedRange.responsiveRange.unit}`
+  const absoluteLabel = (value?.from && value?.to) ?
+    `${format(value.from, "LLL dd, y")} - ${format(value.to, "LLL dd, y")}` :
+    <span>Pick a date</span>
 
-
-  const responsiveLabel = `${responsiveRange.duration} ${responsiveRange.unit}`
-  const absoluteLabel = value?.from ?
-    (value.to ? (<>
-          {format(value.from, "LLL dd, y")} -{" "} {format(value.to, "LLL dd, y")}
-        </>
-      ) : format(value.from, "LLL dd, y")
-    ) : <span>Pick a date</span>
-
-  const dateLabel = value?.from && selectedTab === 0 ? responsiveLabel : absoluteLabel
-
+  const dateLabel = value?.from && selectedRange.tabIndex === 0 ? responsiveLabel : absoluteLabel
 
   const apply = () => {
     if (selectedTab === 1) {
@@ -54,8 +52,8 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
       const isPast = true
       const newDateRange = getResponsiveDateTimeRange({duration, unit, isPast})
       onChange(newDateRange)
-
     }
+    setSelectedRange(prev => ({...prev, tabIndex: selectedTab, responsiveRange: responsiveRange}))
   }
 
   const clear = () => {
@@ -75,7 +73,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
               {dateLabel}
             </div>
           </Popover.Button>
-          <Popover.Panel className=" border max-w-[520px] bg-white shadow-lg   text-slate-900 flex flex-col">
+          <Popover.Panel className=" border max-w-[520px] bg-white shadow-lg rounded  text-slate-900 flex flex-col">
             <div className="tabs p-4">
               <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
                 <Tab.List
@@ -98,15 +96,7 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                     <DateTimeRangeResponsive onChange={setResponsiveRange} value={responsiveRange}/>
                   </Tab.Panel>
                   <Tab.Panel>
-                    <Calendar
-                      initialFocus
-                      disabled={{after: today}}
-                      mode="range"
-                      defaultMonth={dateRange?.from || today}
-                      selected={dateRange}
-                      onSelect={setDateRange}
-                      numberOfMonths={2}
-                    />
+                    <DateTimeRangeAbsolute onChange={setDateRange} value={dateRange} />
                   </Tab.Panel>
                 </Tab.Panels>
               </Tab.Group>
@@ -126,21 +116,13 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
                 </Button>
               </div>
               <div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={close}
-                >
+                <Button variant="ghost" size="sm" onClick={close}>
                   Cancel
                 </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => {
-                    apply();
-                    close();
-                  }}
-                >
+                <Button variant="default" size="sm" onClick={() => {
+                  apply();
+                  close();
+                }}>
                   Apply
                 </Button>
               </div>

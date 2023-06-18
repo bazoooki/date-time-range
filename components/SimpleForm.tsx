@@ -2,7 +2,7 @@
 import DateTimeRangeSelector from "@/components/DateTimeRangeSelector";
 import React from "react";
 import {DateRange} from "react-day-picker";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/ui/Button";
 
 const SimpleForm = () => {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({

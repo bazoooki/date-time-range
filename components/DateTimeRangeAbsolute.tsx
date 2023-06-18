@@ -1,7 +1,7 @@
 import React from "react";
 import {DateRange} from "react-day-picker";
-import {Calendar} from "@/components/calender";
-import {Input} from "@/components/ui/input";
+import {Calendar} from "@/components/Calender";
+import {Input} from "@/components/ui/Input";
 import {format} from "date-fns";
 
 interface DateTimeRangeAbsoluteProps {

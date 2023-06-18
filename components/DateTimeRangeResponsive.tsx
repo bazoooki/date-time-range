@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {RadioGroup} from "@headlessui/react";
 import {CheckCircleIcon} from "@heroicons/react/20/solid";
-import {Input} from "@/components/ui/input";
+import {Input} from "@/components/ui/Input";
 import {cn} from "@/lib/utils";
-import {buttonVariants} from "@/components/ui/button";
+import {buttonVariants} from "@/components/ui/Button";
 import {DAYS, HOURS, MINUTES, MONTHS, WEEKS, YEARS} from "@/lib/time.constants";
 import type {ResponsiveTimeRange} from "@/types/types";
 

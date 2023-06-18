@@ -1,7 +1,7 @@
 'use client';
 import {Popover, Tab} from "@headlessui/react";
 import {CalendarIcon} from "@heroicons/react/20/solid";
-import {Button, buttonVariants} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/Button";
 import {DateRange} from "react-day-picker"
 import React, {useState} from "react";
 import {format} from "date-fns";

@@ -1,4 +1,4 @@
-import SimpleForm from "@/components/simple-form";
+import SimpleForm from "@/components/SimpleForm";
 
 export default function Home() {
   return (

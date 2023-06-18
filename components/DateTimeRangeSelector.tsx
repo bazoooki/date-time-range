@@ -6,16 +6,15 @@ import {DateRange} from "react-day-picker"
 import React, {useState} from "react";
 import {format} from "date-fns";
 import {getResponsiveDateTimeRange} from "@/lib/utils";
-import DateTimeRangeResponsive from "@/components/date-time-range-responsive";
+import DateTimeRangeResponsive from "@/components/DateTimeRangeResponsive";
 import type {ResponsiveTimeRange} from "@/types/types";
 import {MINUTES} from "@/lib/time.constants";
-import DateTimeRangeAbsolute from "@/components/date-time-range-absolute";
+import DateTimeRangeAbsolute from "@/components/DateTimeRangeAbsolute";
 
 interface DateTimeRangeSelectorProps {
   onChange: (value: DateRange | undefined) => void;
   value: DateRange | undefined;
 }
-
 
 const defaultResponsiveRange: ResponsiveTimeRange = {
   duration: 5,
@@ -48,12 +47,12 @@ const DateTimeRangeSelector: React.FC<DateTimeRangeSelectorProps> = ({onChange, 
     }
     setSelectedRange(prev => ({...prev, tabIndex: selectedTab, responsiveRange: responsiveRange}))
   }
-
   const clear = () => {
     setDateRange({from: undefined, to: undefined})
     setResponsiveRange(defaultResponsiveRange)
     onChange({from: undefined, to: undefined})
   }
+
   return (
     <Popover>
       {({close}) => (

@@ -4,16 +4,13 @@ import {Calendar} from "@/components/calender";
 import {Input} from "@/components/ui/input";
 import {format} from "date-fns";
 
-
 interface DateTimeRangeAbsoluteProps {
   onChange: (value: DateRange | undefined) => void;
   value: DateRange | undefined;
 }
 
 const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, value}) => {
-
   const today = new Date();
-
   const handleTimeChange = (val: string, isFrom: boolean) => {
     const date = isFrom ? new Date(value?.from || today) : new Date(value?.to || today)
     const [hours, minutes] = val.split(':')
@@ -25,7 +22,6 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
     const val = isFrom ? {from: date, to: value?.to} : {from: value?.from, to: date}
     onChange(val)
   }
-
   return (
     <div id="date-time-range-absolute" className="flex flex-col space-y-2 justify-center items-center">
       <Calendar
@@ -37,7 +33,7 @@ const DateTimeRangeAbsolute: React.FC<DateTimeRangeAbsoluteProps> = ({onChange, 
         onSelect={onChange}
         numberOfMonths={2}
       />
-      <div className="flex items-center  space-x-1.5 flex-wrap md:flex-nowrap">
+      <div className="flex items-center space-x-1.5 flex-wrap md:flex-nowrap">
         <div className="flex flex-col space-y-1.5  w-full max-w-sm items-start mt-1.5">
           <label htmlFor="start-date" className="text-xs text-slate-600 pl-1">Start date</label>
           <Input
